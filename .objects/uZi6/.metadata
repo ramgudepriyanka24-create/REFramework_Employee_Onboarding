@@ -1,0 +1,12 @@
+﻿{
+  "Name": "Edge The QR Code Generator (TQRCG) Create Free QR Codes",
+  "Type": "App",
+  "Id": "uZi6yMCYEU2Y_9jXLCsYPw",
+  "Reference": "_c8Q_YtwdEGhkeHQMbMPeA/uZi6yMCYEU2Y_9jXLCsYPw",
+  "Created": "2025-12-17T05:38:06.0831912Z",
+  "Updated": "2025-12-17T05:38:06.0831912Z",
+  "CreatedBy": [
+    "UiPath.UIAutomationCore, Version=25.10.21.0, Culture=neutral, PublicKeyToken=null",
+    "UiPath.Platform, Version=25.10.1.0, Culture=neutral, PublicKeyToken=null"
+  ]
+}
