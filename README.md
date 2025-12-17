@@ -1,39 +1,155 @@
-### Documentation is included in the Documentation folder ###
+This project is an Employee Onboarding Automation built using UiPath Robotic Enterprise Framework (REFramework).
 
+The automation:
 
-### REFrameWork Template ###
-**Robotic Enterprise Framework**
+Fetches employee data from a public REST API
 
-* Built on top of *Transactional Business Process* template
-* Uses *State Machine* layout for the phases of automation project
-* Offers high level logging, exception handling and recovery
-* Keeps external settings in *Config.xlsx* file and Orchestrator assets
-* Pulls credentials from Orchestrator assets and *Windows Credential Manager*
-* Gets transaction data from Orchestrator queue and updates back status
-* Takes screenshots in case of system exceptions
+Adds employees into an Orchestrator Queue with priority based on salary
 
+Processes only High-Priority employees
 
-### How It Works ###
+Submits employee details on a web form
 
-1. **INITIALIZE PROCESS**
- + ./Framework/*InitiAllSettings* - Load configuration data from Config.xlsx file and from assets
- + ./Framework/*GetAppCredential* - Retrieve credentials from Orchestrator assets or local Windows Credential Manager
- + ./Framework/*InitiAllApplications* - Open and login to applications used throughout the process
+Generates and stores QR codes
 
-2. **GET TRANSACTION DATA**
- + ./Framework/*GetTransactionData* - Fetches transactions from an Orchestrator queue defined by Config("OrchestratorQueueName") or any other configured data source
+Creates an Excel report
 
-3. **PROCESS TRANSACTION**
- + *Process* - Process trasaction and invoke other workflows related to the process being automated 
- + ./Framework/*SetTransactionStatus* - Updates the status of the processed transaction (Orchestrator transactions by default): Success, Business Rule Exception or System Exception
+Zips QR codes
 
-4. **END PROCESS**
- + ./Framework/*CloseAllApplications* - Logs out and closes applications used throughout the process
+Sends a summary email at the end
 
+The solution follows UiPath best practices, including:
 
-### For New Project ###
+Queue-based transaction processing
 
-1. Check the Config.xlsx file and add/customize any required fields and values
-2. Implement InitiAllApplications.xaml and CloseAllApplicatoins.xaml workflows, linking them in the Config.xlsx fields
-3. Implement GetTransactionData.xaml and SetTransactionStatus.xaml according to the transaction type being used (Orchestrator queues by default)
-4. Implement Process.xaml workflow and invoke other workflows related to the process being automated
+Robust logging
+
+Exception handling
+
+Retry mechanism
+
+🛠️ Technology Stack
+
+UiPath Studio
+
+REFramework
+
+UiPath Orchestrator
+
+REST API (HTTP Request)
+
+Excel Automation
+
+Web Automation
+
+Email Automation
+
+🗂️ Project Structure
+Employee_Onboarding_REFramework
+│
+├── Main.xaml
+├── InitAllSettings.xaml
+├── GetTransactionData.xaml
+├── Process.xaml
+├── EndProcess.xaml
+├── SetTransactionStatus.xaml
+├── Config.xlsx
+│
+├── QRCodes
+│   └── (Generated QR Images)
+│
+└── Output
+    ├── Onboarding_Report_yyyyMMdd.xlsx
+    └── QRCodes.zip
+
+⚙️ Pre-Requisites
+1. Orchestrator Setup
+
+Create a Queue named: New Hires
+
+Queue Type: Default
+
+Ensure the robot has access permissions
+
+2. Local Folders
+
+Create the following folders in the project root:
+
+QRCodes
+Output
+
+3. Required UiPath Packages
+
+Ensure the following packages are installed:
+
+UiPath.System.Activities
+
+UiPath.Web.Activities
+
+UiPath.Excel.Activities
+
+UiPath.Mail.Activities
+
+UiPath.Core.Activities
+
+🔁 Business Logic
+Employee Priority Rules
+Salary Range	Queue Priority
+> 300,000	High
+100,000 – 300,000	Normal
+< 100,000	Low
+
+👉 Only High-Priority employees are processed.
+
+🚀 Workflow Explanation
+🔹 InitAllSettings.xaml
+
+Calls Employee API
+
+Parses JSON response
+
+Determines priority based on salary
+
+Adds employees to New Hires Queue
+
+Logs all queue additions
+
+🔹 GetTransactionData.xaml
+
+Fetches next transaction from Orchestrator Queue
+
+Orchestrator automatically picks High Priority first
+
+🔹 Process.xaml
+
+For each transaction:
+
+Reads employee details from Queue Item
+
+Skips Normal & Low priority employees
+
+Splits employee name into First & Last name
+
+Submits data to web form (rpachallenge.com)
+
+Generates QR Code
+
+Saves QR image to QRCodes folder
+
+Stores details in an in-memory DataTable
+
+Logs success or failure
+
+🔹 EndProcess.xaml
+
+Writes processed employees to Excel report
+
+Zips all QR code images
+
+Sends email with:
+
+Excel report
+
+QR codes ZIP
+
+Logs completion summary
